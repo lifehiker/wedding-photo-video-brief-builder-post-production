@@ -11,6 +11,20 @@ const authConfig: NextAuthConfig = {
   },
   providers: [],
   callbacks: {
+    authorized({ auth: session, request: { nextUrl } }) {
+      const isLoggedIn = !!session?.user;
+      const path = nextUrl.pathname;
+      const isAppRoute =
+        path.startsWith("/dashboard") ||
+        path.startsWith("/projects") ||
+        path.startsWith("/style-guides") ||
+        path.startsWith("/vendors") ||
+        path.startsWith("/onboarding") ||
+        path.startsWith("/settings") ||
+        path.startsWith("/billing");
+      if (isAppRoute && !isLoggedIn) return false;
+      return true;
+    },
     jwt({ token, user }) {
       if (user) token.id = (user as { id?: string }).id;
       return token;
