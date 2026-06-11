@@ -1,11 +1,16 @@
 import { auth } from "@/auth";
-import { redirect } from "next/navigation";
 import { AppSidebar } from "@/components/app/AppSidebar";
 
 export default async function AppLayout({ children }: { children: React.ReactNode }) {
   const session = await auth();
   if (!session?.user?.id) {
-    redirect("/login");
+    return (
+      <div className="min-h-screen bg-stone-50 flex items-center justify-center">
+        <p className="text-stone-600">
+          Please <a href="/login" className="text-rose-700 underline">sign in</a> to continue.
+        </p>
+      </div>
+    );
   }
 
   return (
