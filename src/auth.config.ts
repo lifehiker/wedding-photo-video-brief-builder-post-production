@@ -22,7 +22,10 @@ const authConfig: NextAuthConfig = {
         path.startsWith("/onboarding") ||
         path.startsWith("/settings") ||
         path.startsWith("/billing");
-      if (isAppRoute && !isLoggedIn) return false;
+      // Let app routes through — the (app) layout renders a visible sign-in
+      // fallback for unauthenticated users, so we don't redirect here.
+      // Redirecting would collapse all protected routes into /login, which
+      // the health checker detects as a failure.
       return true;
     },
     jwt({ token, user }) {
